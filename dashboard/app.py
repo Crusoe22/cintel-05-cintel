@@ -1,6 +1,5 @@
 import faicons
 import shiny
-import shinylive
 import pandas
 import pyarrow
 import plotly
