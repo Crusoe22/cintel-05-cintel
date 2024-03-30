@@ -13,7 +13,7 @@ Integrating live data and continuous intelligence into your own previous interac
 
 import faicons
 import shiny
-#import shinylive
+import shinylive
 import pandas
 import pyarrow
 import plotly
