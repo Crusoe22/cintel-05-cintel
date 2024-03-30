@@ -1,16 +1,3 @@
-'''Your job is to:
-
-implement the example provided and
-propose and implement an enhancement, extension, or variation on the app. 
-Options include:
-
-Changing the theme, colors, visuals to be more engaging
-Changing the layout to better show the current deque
-Changing the chart to not flash on each update
-Changing the subject domain from temperatures in Antarctica (so we can add it to our Penguin Dashboards) to an alternate focus using random data appropriate for your chosen domain. 
-Integrating live data and continuous intelligence into your own previous interactive app'''
-
-
 import faicons
 import shiny
 import shinylive
@@ -43,6 +30,7 @@ from faicons import icon_svg
 # --------------------------------------------
 # FOR LOCAL DEVELOPMENT
 # --------------------------------------------
+
 
 # Add all packages not in the Std Library
 # to requirements.txt:
@@ -118,33 +106,6 @@ ui.page_opts(title="PyShiny Express: Live Temperature Data in Celsius (Basic)", 
 # Note the with statement to create the sidebar followed by a colon
 # Everything in the sidebar is indented consistently
 
-'''
-with ui.sidebar(open="open"):
-
-    ui.h2("Antarctic Explorer", class_="text-center")
-
-    ui.p(
-        "A demonstration of real-time temperature readings in Antarctica.",
-        class_="text-center",
-    )
-
-    ui.hr()
-
-    ui.h6("Links:")
-
-    ui.a(
-        "GitHub Source",
-        href="https://github.com/Crusoe22/cintel-05-cintel",
-        target="_blank",
-    )
-
-    ui.a(
-        "GitHub App",
-        href="https://denisecase.github.io/cintel-05-cintel-basic/",
-        target="_blank",
-    )
-
-    ui.a("PyShiny", href="https://shiny.posit.co/py/", target="_blank")'''
 
 with ui.sidebar(open="open"):
     ui.h2("Antarctic Explorer", class_="text-center")
