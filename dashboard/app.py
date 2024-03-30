@@ -1,7 +1,6 @@
 import faicons
 import shiny
 import pandas
-import pyarrow
 import plotly
 import scipy
 
