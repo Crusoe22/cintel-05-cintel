@@ -33,7 +33,7 @@ from faicons import icon_svg
 # Use a type hint to make it clear that it's an integer (: int)
 # --------------------------------------------
 
-UPDATE_INTERVAL_SECS: int = 3
+UPDATE_INTERVAL_SECS: int = 1
 
 # --------------------------------------------
 # Initialize a REACTIVE VALUE with a common data structure
@@ -61,9 +61,9 @@ def reactive_calc_combined():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
     # Data generation logic
-    temp = round(random.uniform(-18, -16), 1)
+    temp = round(random.uniform(19, 23), 1)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    new_dictionary_entry = {"temp":temp, "timestamp":timestamp}
+    new_dictionary_entry = {"Temp":temp, "Timestamp":timestamp}
 
     # get the deque and append the new entry
     reactive_value_wrapper.get().append(new_dictionary_entry)
@@ -93,11 +93,13 @@ ui.page_opts(title="PyShiny Express: Live Data Example", fillable=True)
 # Sidebar is typically used for user interaction/information
 # Note the with statement to create the sidebar followed by a colon
 # Everything in the sidebar is indented consistently
-with ui.sidebar(open="open"):
 
-    ui.h2("Antarctic Explorer", class_="text-center")
+
+with ui.sidebar(open="open", bg="#f8f8f8"):
+
+    ui.h2("Orlando Florida Tourist", class_="text-center")
     ui.p(
-        "A demonstration of real-time temperature readings in Antarctica.",
+        "A demonstration of real-time temperature readings in Orlando Florida.",
         class_="text-center",
     )
     ui.hr()
@@ -124,7 +126,7 @@ with ui.sidebar(open="open"):
 with ui.layout_columns():
     with ui.value_box(
         showcase=icon_svg("sun"),
-        theme="bg-gradient-blue-purple",
+         theme="bg-gradient-red-orange",
     ):
 
         "Current Temperature"
@@ -133,10 +135,13 @@ with ui.layout_columns():
         def display_temp():
             """Get the latest reading and return a temperature string"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-            return f"{latest_dictionary_entry['temp']} C"
+            return f"{latest_dictionary_entry['Temp']} C"
 
-        "warmer than usual"
+        "Warmer than usual"
 
+    #Add new style for tags
+    ui.tags.style(
+    ".card-header { color:black; background:#FFFFE0 !important; }")
   
 
     with ui.card(full_screen=True):
@@ -146,11 +151,17 @@ with ui.layout_columns():
         def display_time():
             """Get the latest reading and return a timestamp string"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-            return f"{latest_dictionary_entry['timestamp']}"
+            timestamp = latest_dictionary_entry['Timestamp']
+    
+            # Convert timestamp string to datetime object
+            timestamp_datetime = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+    
+            # Format the datetime object as per your preference
+            formatted_timestamp = timestamp_datetime.strftime('%b %d, %Y %I:%M:%S %p')  # Example format
+            
+            return formatted_timestamp
 
-
-#with ui.card(full_screen=True, min_height="40%"):
-with ui.card(full_screen=True):
+with ui.card(full_screen=True, min_height="30%"):
     ui.card_header("Most Recent Readings")
 
     @render.data_frame
@@ -158,9 +169,9 @@ with ui.card(full_screen=True):
         """Get the latest reading and return a dataframe with current readings"""
         deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
         pd.set_option('display.width', None)        # Use maximum width
-        return render.DataGrid( df,width="100%")
+        return render.DataGrid( df,width="90%")
 
-with ui.card():
+with ui.card(full_screen=True, min_height="30%"):
     ui.card_header("Chart with Current Trend")
 
     @render_plotly
@@ -171,18 +182,18 @@ with ui.card():
         # Ensure the DataFrame is not empty before plotting
         if not df.empty:
             # Convert the 'timestamp' column to datetime for better plotting
-            df["timestamp"] = pd.to_datetime(df["timestamp"])
+            df["Timestamp"] = pd.to_datetime(df["Timestamp"])
 
             # Create scatter plot for readings
             # pass in the df, the name of the x column, the name of the y column,
             # and more
         
             fig = px.scatter(df,
-            x="timestamp",
-            y="temp",
+            x="Timestamp",
+            y="Temp",
             title="Temperature Readings with Regression Line",
-            labels={"temp": "Temperature (°C)", "timestamp": "Time"},
-            color_discrete_sequence=["blue"] )
+            labels={"Temp": "Temperature (°C)", "Timestamp": "Time"},
+            color_discrete_sequence=["purple"] )
             
             # Linear regression - we need to get a list of the
             # Independent variable x values (time) and the
@@ -192,15 +203,16 @@ with ui.card():
             # For x let's generate a sequence of integers from 0 to len(df)
             sequence = range(len(df))
             x_vals = list(sequence)
-            y_vals = df["temp"]
+            y_vals = df["Temp"]
 
             slope, intercept, r_value, p_value, std_err = stats.linregress(x_vals, y_vals)
             df['best_fit_line'] = [slope * x + intercept for x in x_vals]
 
             # Add the regression line to the figure
-            fig.add_scatter(x=df["timestamp"], y=df['best_fit_line'], mode='lines', name='Regression Line')
+            fig.add_scatter(x=df["Timestamp"], y=df['best_fit_line'], mode='lines', name='Regression Line')
 
             # Update layout as needed to customize further
             fig.update_layout(xaxis_title="Time",yaxis_title="Temperature (°C)")
 
         return fig
+        
