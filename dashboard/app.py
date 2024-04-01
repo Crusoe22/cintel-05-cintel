@@ -2,6 +2,8 @@
 # Imports at the top - PyShiny EXPRESS VERSION
 # --------------------------------------------
 
+import plotly.graph_objects as go
+
 # From shiny, import just reactive and render
 from shiny import reactive, render
 
@@ -42,7 +44,7 @@ UPDATE_INTERVAL_SECS: int = 1
 # This reactive value is a wrapper around a DEQUE of readings
 # --------------------------------------------
 
-DEQUE_SIZE: int = 5
+DEQUE_SIZE: int = 10
 reactive_value_wrapper = reactive.value(deque(maxlen=DEQUE_SIZE))
 
 # --------------------------------------------
@@ -61,7 +63,7 @@ def reactive_calc_combined():
     reactive.invalidate_later(UPDATE_INTERVAL_SECS)
 
     # Data generation logic
-    temp = round(random.uniform(19, 23), 1)
+    temp = round(random.uniform(17, 23), 1)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_dictionary_entry = {"Temp":temp, "Timestamp":timestamp}
 
@@ -161,7 +163,7 @@ with ui.layout_columns():
             
             return formatted_timestamp
 
-with ui.card(full_screen=True, min_height="30%"):
+with ui.card(full_screen=True, min_height="10%"):
     ui.card_header("Most Recent Readings")
 
     @render.data_frame
@@ -171,7 +173,7 @@ with ui.card(full_screen=True, min_height="30%"):
         pd.set_option('display.width', None)        # Use maximum width
         return render.DataGrid( df,width="90%")
 
-with ui.card(full_screen=True, min_height="30%"):
+with ui.card(full_screen=True, min_height="20%"):
     ui.card_header("Chart with Current Trend")
 
     @render_plotly
@@ -215,4 +217,23 @@ with ui.card(full_screen=True, min_height="30%"):
             fig.update_layout(xaxis_title="Time",yaxis_title="Temperature (°C)")
 
         return fig
+
+# Add the rendering function to the UI layout
+with ui.card(full_screen=True, min_height="15%"):
+    ui.card_header("Temperature Distribution")
+
+    # Define a new rendering function for the pie chart
+    @render_plotly
+    def display_pie_chart():
+        # Fetch the DataFrame from the reactive calculation
+        deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
+    
+        # Count the number of values over and under 20 degrees
+        over_20 = len(df[df['Temp'] > 20])
+        under_20 = len(df[df['Temp'] <= 20])
+    
+        # Create a pie chart
+        fig = go.Figure(data=[go.Pie(labels=['Days over 20°C', 'Days under 20°C'], values=[over_20, under_20])])
+        fig.update_layout(title='Temperature Distribution')
         
+        return fig
