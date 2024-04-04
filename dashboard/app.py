@@ -234,7 +234,7 @@ with ui.card(full_screen=True, min_height="15%"):
 
         
         # Create a pie chart with icon in label
-        fig = go.Figure(data=[go.Pie(labels=['Days over 20°C', 'Days under 20°C'], values=[over_20, under_20])])
+        fig = go.Figure(data=[go.Pie(labels=['Days over 20 Celsius', 'Days under 20 Celsius'], values=[over_20, under_20])])
                                              
         fig.update_layout(title='Temperature Distribution')
         
