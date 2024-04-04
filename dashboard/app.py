@@ -231,9 +231,11 @@ with ui.card(full_screen=True, min_height="15%"):
         # Count the number of values over and under 20 degrees
         over_20 = len(df[df['Temp'] > 20])
         under_20 = len(df[df['Temp'] <= 20])
-    
-        # Create a pie chart
+
+        
+        # Create a pie chart with icon in label
         fig = go.Figure(data=[go.Pie(labels=['Days over 20°C', 'Days under 20°C'], values=[over_20, under_20])])
+                                             
         fig.update_layout(title='Temperature Distribution')
         
         return fig
