@@ -127,7 +127,7 @@ with ui.sidebar(open="open", bg="#f8f8f8"):
 
 with ui.layout_columns():
     with ui.value_box(
-        showcase=icon_svg("sun"),
+        showcase=icon_svg("cloud"),
          theme="bg-gradient-red-orange",
     ):
 
